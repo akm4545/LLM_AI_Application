@@ -317,7 +317,14 @@ transformer_with_code.ipynb 파일에서 멀티 헤드 어텐션 구현 참조
 
 transformer_with_code.ipynb 파일에서 층 정규화 코드 참조  
   
+# **피드 포워드 층**  
+피드 포워드 층(feed forward layer)은 데이터의 특징을 학습하는 완전 연결 층(fully connected layer)을 말한다. 멀티 헤드 어텐션이 단어 사이의 관계를 
+파악하는 역할이라면 피드 포워드 층은 입력 텍스트 전체를 이해하는 역할을 담당한다. 피드 포워드 층은 아래 예제 코드와 같이 선형 층, 드롭아웃 층, 층 정규화, 
+활성 함수로 구성된다. 임베딩의 차원을 동일하게 유지해야 쉽게 층을 쌓아 확장이 가능하기 때문에 입력과 출력의 형태가 동일하도록 맞춘다. 일반적으로 d_model 차원에서 
+d_model보다 2~3배 큰 dim_feedforward 차원으로 확장했다가 다시 d_model로 변환한다.  
 
+transformer_with_code.ipynb 파일에서 피드 포워드 층 코드 참조  
+  
 
   
 
