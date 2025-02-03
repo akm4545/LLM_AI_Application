@@ -332,6 +332,19 @@ transformer_with_code.ipynb 파일에서 피드 포워드 층 코드 참조
 다시 더해지는 화살표 2개가 있는 것을 확인할 수 있는데 안정적인 학습이 가능하도록 도와주는 잔차 연결(residual connection)이다. 잔차 연결은 화살표 모양 그대로 
 입력을 다시 더해주는 형태로 구현한다. 또한 그림에서 블록으 Ne번 반복된다고 표시되어 있는데 트랜스포머 인코더는 그림의 인코더 블록을 반복해서 쌓아서 만든다.  
   
+하나의 인코더 층을 코드로 구현하면 아래 예제와 같다. __init__ 메서드에서 멀티 헤드 어텐션 층, 층 정규화, 드롭아웃, 피드 포워드 층을 불러온다. 다음으로 
+위 그림의 인코더 순서 그대로 입력인 src를 self.norm1을 통해 층 정규화를 취하고 멀티 헤드 어텐션 클래스(MultiheadAttention)를 인스턴스화한 self.attn을 통해 
+멀티 헤드 어텐션 연산을 수행한 후 잔차 연결을 위해 어텐션 결과에 드롭아웃을 취한 self.dropout1(attn_output)과 입력(src)을 더해준다. 마지막으로 self.feed_forward(x)
+를 통해 피드 포워드 연산을 취한다.  
+
+transformer_with_code.ipynb 파일에서 인코더 층 참조  
+  
+이제 위 그림에서 표시된 것과 같이 인코더 층(TransformerEncoderLayer)을 Ne번 반복되도록 코드로 구현한다. 아래 예제에서 get_clones 함수는 입력한 모듈
+(module)을 깊은 복사를 통해 N번 반복해 모듈 리스트에 담는다. TransformerEncoder 클래스에서는 인자로 전달받은 encoder_layer를 get_clones 함수를 통해 
+num_layers번 반복해 nn.ModuleList에 넣고 forward 메서드에서 for 문을 통해 순환하면서 인코더 층 연산을 반복 수행하도록 만든다.  
+
+transformer_with_code.ipynb 파일에서 인코더 구현 참조  
+  
 
 
   
