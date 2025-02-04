@@ -383,6 +383,11 @@ transformer_with_code.ipynb 파일에서 크로스 어텐션이 포함된 디코
 
 transformer_with_code.ipynb 파일에서 디코더 구현 참조  
   
+# **BERT, GPT, T5 등 트랜스포머를 활용한 아키텍처**  
+트랜스포머 아키텍처를 활용한 모델은 크게 세 가지 그룹으로 나눌 수 있는데 인코더만 활용해 자연어 이해(Natural Language Understanding, NLU) 작업에 
+집중한 그룹, 디코더만 활용해 자연어 생성(Natural Language Generation, NLG) 작업에 집중한 그룹, 인코더와 디코더를 모두 활용해 더 넓은 범위의 작업을 수행할 
+수 있도록 한 그룹이다.  
+  
 
   
 
