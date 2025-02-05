@@ -388,6 +388,12 @@ transformer_with_code.ipynb 파일에서 디코더 구현 참조
 집중한 그룹, 디코더만 활용해 자연어 생성(Natural Language Generation, NLG) 작업에 집중한 그룹, 인코더와 디코더를 모두 활용해 더 넓은 범위의 작업을 수행할 
 수 있도록 한 그룹이다.  
   
+각각의 장단점을 정리하면 아래 표와 같다.  
+  
+![img.png](image2/img9.png)  
+  
+
+  
 
   
 
