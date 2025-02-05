@@ -392,6 +392,21 @@ transformer_with_code.ipynb 파일에서 디코더 구현 참조
   
 ![img.png](image2/img9.png)  
   
+# **인코더를 활용한 BERT**  
+트랜스포머의 인코더만을 활용해 자연어 이해 태스크에 집중한 대표적인 모델은 BERT(Bidirectional Encoder Representations from Transformers)이다. 
+구글에서 개발한 BERT는 이름에서 나타나듯이 양뱡향 문맥을 모두 활용해 텍스트를 이해한다.  
+  
+![img.png](image2/img10.png)  
+  
+BERT는 위 그림의 왼쪽과 같이 입력 토큰의 일부를 마스크 토큰으로 대체하고 그 마스크 토큰을 맞추는 마스크 언어 모델링(Masked Language Modeling, MLM)과제를 
+통해 사전 학습한다. 사전 학습한 모델은 이후에 필요한 다운스트림(downstream)과제에 따라 미세 조정(fine-tuning)해 사용한다. 위 그림에서는 사전 학습된 
+BERT를 메일이 스팸인지 아닌지를 분류하는 텍스트 분류 작업으로 미세 조정했다. 하지만 BERT는 텍스트 분류뿐만 아니라 토큰 분류(token classification), 질문 답변
+(question answering), 자연어 추론(natural language inference)등 다양한 자연어 이해 작업에서 훌륭한 성능을 보인다.  
+  
+특히 BERT는 양뱡향 문맥을 이해할 수 있다는 특징이 있어 자연어 이해 작업에서 뛰어난 성능을 보인다. BERT가 큰 성공을 거둔 이후로 BERT를 개선핸 RoBERTa, 
+ELECTRA 등 여러 변형 인코더 모델이 나왔다. BERT는 생성 작업에는 적합하지 않아 최근 LLM의 인기와는 다소 관련이 떨어진다고 생각할 수 있지만 LLM의 활용 과정에서도 
+사용자 발화의 의도 분류와 같이 효율적인 LLM 활용을 위한 연결 작업에는 자연어 이해 작업이 많이 사용되기 때문에 여전히 가장 사랑받는 모델군 중 하나다.  
+  
 
   
 
