@@ -102,5 +102,101 @@ https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard)에서 확인�
 모델을 선택할 수 있다. Precision(정밀도) 섹션에서는 모델 파라미터의 데이터 형식에 따라 모델을 필터링 할 수 있다. 위 그림에서는 float16 형식을 사용하는 
 모델을 선택하고 있다. Model sizes(모델 크기) 섹션에서는 10억 개 파라미터 단위로 모델의 크기를 선택할 수 있다.  
   
+# **허깅페이스 라이브러리 사용법 익히기**  
+# **모델 활용하기**  
+허깅페이스 트랜스포머 라이브러리를 사용하면 허깅페이스 모델 허브의 모델을 쉽게 불러와 사용할 수 있다. 허깅페이스 모델을 불러오기 전에 꼭 알아야 하는 사실이 있는데 
+허깅페이스에서는 모델을 바디(body)와 헤드(head)로 구분한다는 점이다. 이렇게 구분하는 이유는 같은 바디를 사용하면서 다른 작업에 사용할 수 있도록 만들기 위해서다.  
+  
+![img.png](image/img9.png)  
+  
+예를 들어 위 그림과 같이 바디는 모두 구글에서 개발한 BERT 모델을 사용하지만 사용하려는 작업에 따라 서로 다른 헤드를 사용할 수 있다. 그림 a는 문장 전체가 
+긍정인지 부정인지를 분류한느 모델인데 이떄는 바디가 반환하는 여러 잠재 상태(hidden state)중 가장 앞에 있는 [CLS] 토큰의 데이터만 받아 예측에 사용한다. 
+그림 b는 각 토큰이 사람이나 장소에 해당하는지 판단하는 개체명 인식(named entity recognition)모델인데 각 토큰에 대해 판단해야 하기 떄문에 모든 토큰의 
+데이터를 받아 각각 사람인지 장소인지를 예측한다. 그림에서 ㅇ로 표기된 것은 사람이나 장소에 해당하지 않는다는 예측 결과를 나타낸 것이다.  
+  
+바디는 모델의 기본 구조를 담당하는 부분이다. BERT 모델을 예로 들면 Transformer 블록으로 이루어진 기본적인 신경망 구조며 이 부분은 입력된 문장을 처리하고 
+중요한 특징(Feature)을 추출하는 역할을 한다.  
+  
+헤드는 추출된 정보를 바탕으로 최종적인 예측을 수행하는 부분이다.(예: 감성 분석, 문장 분류, 변역 등) 바디에서 추출된 정보를 바탕으로 마지막 결정을 내리는 부분을 
+담당한다.  
+  
+허깅페이스 트랜스포머 라이브러리에서는 모델의 바디만 불러올 수도 있고 헤드와 함꼐 불러올 수도 있다.  
 
+chapter3.ipynb 파일에서 모델 아이디로 모델 불러오기 참조  
+  
+AutoModel은 모델의 바디를 불러오는 클래스로 from_pretrained() 메서드에서 인자로 받는 model_id에 맞춰 적절한 클래스를 가져온다. model_id가 허깅페이스 
+모델 허브의 저장소 경로(예: klue/roberta-base)인 경우 모델 허브에서 모델을 다운로드하고 로컬 경로인 경우(예: ./text_classification) 지정한 로컬 경로에서 
+모델을 불러온다. 위 예제에서는 모델 아이디로 klue/reberta-base를 지정해 허깅페이스 링크(https://huggingface.co/klue/roberta-base)의 모델을 
+내려받아 model 변수에 저장한다. 해당 모델은 RoBERTa 모델을 한국어로 학습한 모델인데 여기서 RoBERTa는 구글의 BERT를 개선한 모델이다.  
+  
+그렇다면 AutoModel 클래스는 어떻게 klue/roberta-base 저장소의 모델이 RoBERTa 계열의 모델인지 알 수 있을까? 허깅페이스 모델을 저장할 때 config.json 
+파일이 함께 저장되는데 해당 설정 파일에는 아래 예제와 같이 모델의 종류(model_type), 여러 설정 파라미터(num_attention_heads, num_hidden_layers 등), 
+어휘 사전 크기(vocab_size), 토크나이저 클래스(tokenizer_class) 등이 저장된다. AutoModel과 AutoTokenizer 클래스는 config.json 파일을 참고해 적절한 
+모델과 토크나이저를 불러온다. 아래 예제에서 klue/roberta-base의 model_type이 "roberta"로 되어 있는데 AutoModel은 이 정보를 통해 RoBERTa 모델을 불러온다. 
+  
+config.json 파일의 일부  
+{  
+ "architectures": ["RobertaForMaskedLM"],  
+ "attention_probs_dropout_prob": 0.1,  
+ ...  
+ "model_type": "roberta",  
+ "num_attention_heads": 12,  
+ "num_hidden_layers": 12,  
+ "pad_token_id": 1,  
+ "type_vocab_size": 1,  
+ "vocab_size": 32000,  
+ "tokenizer_class": "BertTokenizer"  
+}  
+  
+이번에는 텍스트 분류 헤드가 붙은 모델을 불러와 보자. 아래 예제를 실행하면 모델 허브의 SamLowe/roberta-base-go_emotions 저장소에서 텍스트 분류 
+모델을 내려받아 classification_model 변수에 저장한다. 아래 예제를 보면 모델 바디만 불러올 때와 달리 AutoModelForSequenceClassification 클래스를 
+사용했는데 이름에서 알 수 있듯이 텍스트 시퀀스 분류를 위한 헤드가 포함된 모델을 불러올 때 사용하는 클래스다. SamLowe/roberta-base-go_emotions 모델에 
+대한 더 자세한 사항은 허깅페이스 링크(https://huggingface.co/SamLowe/roberta-base-go_emotions)에서 확인할 수 있다.  
+
+chapter3.ipynb 파일에서 모델 아이디로 모델 불러오기 참조  
+  
+![img.png](image/img10.png)  
+  
+SamLowe/roberta-base-go_emotions 모델은 위 그림과 같이 분류 헤드가 포함돼 있다. 이 모델은 입력 문장이 어떤 감성을 나타내는지 분류하는데 예를 
+들어 문장에 감탄(admiration), 즐거움(amusement), 화(anger) 등과 같은 감정이 포함돼 있는지를 분류한다.  
+  
+그렇다면 분류 헤드가 어떤 감정을 분류하는지 어떻게 알 수 있을까? 앞서 모델 바디를 불러올 때와 마찬가지로 저장소의 config.json 파일에서 확인할 수 있다.  
+SamLowe/roberta-base-go_emotions 저장소를 확인하면 아래와 같은 config.json 파일을 팢을 수 있다. 앞서 본 klue/roberta-base와 동일하게 model_type은 
+"roberta"이지만 모델 아키텍처가 "~ForSequenceClassification"으로서 분류를 위한 모델임을 알 수 있다. 또 헤드의 분류 결과가 어떤 의미인지 확인할 수 있는 
+id2label을 갖고 있다. id2label을 살펴보면 0은 감탄, 1은 즐거움, 2는 화를 의미한다.  
+  
+config.json  
+{  
+ "_name_or_path": "roberta-base",  
+ "architectures": [  
+  "RobertaForSequenceClassification"  
+ ],  
+ ...  
+ "model_type": "roberta",  
+ "id2label": {  
+    "0": "admiration",  
+    "1": "amusement",  
+    "2": "anger",  
+    ...
+ }  
+}  
+  
+텍스트 분류를 위한 아키텍처에 모델 바디만 불러와 보자. 앞서 살펴본 대로 AutoModelForSequenceClassification 클래스를 사용하면 분류 헤드가 붙은 
+모델을 불러올 수 있다. 아래 예제에서는 모델 바디 부분의 파라미터만 있는 klue/roberta-base 저장소의 모델을 불러온다.  
+
+chapter3.ipynb 파일에서 분류 헤드가 랜덤으로 초기화된 모델 불러오기 참조  
+  
+모델을 불러올 때 에러는 발생하지 않지만 경고가 나타난다. 경고의 내용은 모델의 바디 부분은 klue/reberta-base의 사전 학습된 파라미터를 불러왔지만 
+klue/roberta-base 모델 허브에서는 분류 헤드에 대한 파라미터를 찾을 수 없어 랜덤으로 초기화했다는 것이다. 분류 헤드는 랜덤으로 초기화됐기 때문에 
+그대로 사용해서는 안 되고 추가 학습 이후에 사용하라고 안내하고 있다.  
+  
+![img.png](image/img11.png)  
+  
+경고의 내용을 명확히 이해하기 위해 그림으로 표현하면 위와 같다. 바디 부분은 klue/roberta-base 모델에서 가져왔지만 분류 헤드는 랜덤으로 초기화된 상태다. 
+현재 상태에서는 분류 헤드가 학습되지 않았기 때문에 의미 있는 분류를 하지 못한다.  
+  
+첫 번째 바디만 불러오는 코드는 바디만 있어 직접 헤드를 추가하고 학습해야 하지만 마지막 예제는 바디 + 헤드(랜덤 초기화)가 있으므로 헤드만 학습시키면 된다.  
+  
+
+  
 
