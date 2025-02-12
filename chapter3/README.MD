@@ -250,3 +250,26 @@ attention_mask는 해당 토큰이 패딩 토큰인지 실제 데이터인지에
 
 chapter3.ipynb 파일에서 attention_mask 확인 참조  
   
+# **데이터셋 활용하기**  
+datasets 라이브러리를 사용하면 앞서 허깅페이스 허브에서 살펴봤던 데이터셋을 코드로 불러올 수 있다. 아래 예제는 KLUE 데이터셋의 서브셋 중 하나인 
+MRC 데이터셋이다.  
+
+chapter3.ipynb 파일에서 KLUE MRC 데이터셋 다운로드 참조  
+  
+데이터셋을 불러오는 함수는 load_dataset으로서 데이터셋의 이름인 klue와 서브셋 이름인 mrc를 load_dataset 함수에 인자로 전달해서 MRC 데이터셋을 
+내려받았다.  
+  
+![img.png](image/img12.png)  
+  
+klue_mrc_dataset의 내용을 확인하면 위 그림과 같다. 데이터셋에는 학습(train)과 검증(calidation) 유형의 데이터가 각각 17554개 5841개 있으며 
+제목(title), 내용(context)과 질문(question), 정답(answers) 등의 컬럼이 있다.  
+  
+만약 유형이 train인 데이터만 받고 싶다면 load_dataset() 함수에 split='train'인자를 입력하면 된다.  
+  
+데이터셋 저장소에 있는 데이터만 불러올 수 있는 것은 아니고 아래 예제와 같은 코드로 로컬에 있는 파일이나 파이썬 객체를 받아 데이터셋으로 사용할 수 있다. 
+코드를 보면 로컬에 저장된 csv 파일을 불러오기 위해 load_dataset에 데이터의 형식인 csv를 지정하고 파일 경로를 data_files의 인자로 전달했다. 파이썬 
+딕셔너리를 데이터셋으로 변환하고 싶은 경우 Dataset 클래스의 from_dict 메서드를 사용해 데이터셋으로 변환할 수 있다. 데이터 처리에서 많이 사용하는 판다스 
+데이터프레임을 데이터셋으로 변환하고 싶은 경우 Dataset 클래스의 from_pandas 메서드를 사용하면 된다. (공식 문서 https://huggingface.co/docs/datasets/loading 참고)  
+
+chapter3.ipynb 파일에서 로컬의 데이터 활용하기 참조  
+  
