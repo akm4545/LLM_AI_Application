@@ -418,7 +418,3 @@ chapter3.ipynb 파일에서 학습한 모델을 불러와 pipeline을 활용해 
   
 chapter3.ipynb 파일에서 커스텀 파이프라인 구현 참조  
   
-
-  
-
-
