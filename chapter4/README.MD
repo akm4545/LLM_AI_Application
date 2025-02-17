@@ -15,7 +15,8 @@ OpenAI는 두 단계를 거쳐 GPT-3를 챗GPT로 변화시켰다. 먼저 네이
   
 # **코딩 테스트 통과하기: 사전 학습과 지도 미세 조정**  
 # **코딩 개념 익히기: LLM의 사전 학습**  
-비전공자 A가 개발자를 지원하며 파이썬을 배운다고 가정한다. 비유 -> 사람이 익히는 과정: 그에 대응되는 LLM의 학습 과정  
+비유 -> 사람이 익히는 과정: 그에 대응되는 LLM의 학습 과정  
+비전공자 A가 개발자를 지원하며 파이썬을 배운다고 가정한다.  A는 파이썬 문법을 공부하면서 기본 문법을 익히고 클론 코딩, 책을 찾아볼 것이다.  
   
 ![img.png](img2.png)  
   
@@ -37,4 +38,56 @@ A가 다양한 자료를 보며 프로그래밍을 처음 공부하는 과정은
 여기서 맞추도록 학습한다는 것은 예를 들어 "최고의 프로그래밍 언어는?"이라는 입력에 대해 다음으로 오는 정답 토큰이 '파이썬'이라면 그림 오른쪽과 같이 
 언어 모델이 다음 단어로 '파이썬'을 예측할 확률이 높아지도록 학습시키는 것을 말한다. 이런 과정을 수많은 학습 데이터에 대해 수행하면서 어떤 단어가 
 다음에 올지 학습하게 된다.  
+  
+# **연습문제 풀어보기: 지도 미세 조정**  
+프로그래밍 언어의 문법이나 자료구조와 알고리즘 같은 기본 개념을 익혔다면 다음으로 필요한 건 코딩 테스트 연습 문제를 풀어보는 것이다. 예제 문제를 
+충분히 풀어보고 풀이 과정을 익혀야 한다. 코딩 테스트 서비스마다 정답을 작성하는 방식이 다른데 서비스에 맞게 코드를 작성할 수 있는 연습도 필요하다.  
+  
+LLM도 사용자의 요청에 적절히 응답하기 위해서는 사람이 코딩 테스트를 준비할 때와 비슷하게 요청의 형식을 적절히 해석하고 응답의 형태를 적절히 작성하며 
+요청과 응답이 잘 연결되도록 추가로 학습한다. 이를 지도 미세 조정(supervised fine-tuning)이라고 한다. 지도 미세 조정에서 '지도'란 학습 데이터에 
+정답이 포함되어 있다는 의미다. 지도 미세 조정을 통해 LLM은 사용자의 요청에 맞춰 응답하도록 학습하는데 이를 정렬(alignment)이라고 한다. 사람의 
+요청과 LLM의 응답이 정렬되도록 한다는 의미다.  
+  
+지도 미세 조정에 사용하는 데이터셋을 지시 데이터셋(instruction dataset)이라고 부른다. 사용자의 지시에 맞춰 응답한 데이터셋이라는 의미다. 이와 같은 
+지시 데이터셋에 비해 사전 학습 데이터셋은 형식이 너무나도 다양하고 사용자의 요청에 응답하는 형식의 데이터는 적다. 특히 양질의 데이터는 훨씬 더 적을 수밖에 
+없다. 딥러닝 모델은 기본적으로 학습 데이터에 있는 행동을 배우기 때문에 학습 데이터에 요청에 응답하는 데이터가 적다면 그 행동은 잘 배우지 못한다.  
+  
+이런 문제를 보완하기 위해 사용자의 요구사항과 그에 대한 응답(정답)을 구조화한 데이터를 구축하고 언어 모델의 학습에 활용한다. 지시 데이터셋은 사용자의 요청을 
+형식에 맞춰 작성하고 그에 대해 적절한 형식의 응답을 하는 형태다.  
+  
+![img.png](img4.png)  
+  
+OpenAI는 2022년에 공개한 챗GPT를 개발하면서 위 그림과 같이 데이터 레이블러(labeler)를 고용해 13000개가 넘는 지시 데이터셋을 구축해 모델을 학습시켰다.  
+
+{  
+    "instruction": "Create a classification task by clustering the given list of items.",  
+    "input": "Apples, oranges, bananas, strawberries, pineapples",  
+    "output": "Class 1: Apples, Oranges\nClass 2: Bananas, Strawberries\nClass 3: Pineapples",  
+    "text": "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\nCreate a classification task by clustering the given list of items.\n\n### Input:\nApples, oranges, bananas, strawberries, pineapples\n\n### Response:\nClass 1: Apples, Oranges\nClass 2: Bananas, Strawberries\nClass 3: Pineapples",  
+}  
+  
+스탠퍼드대학교에서 오픈 소스 라마 모델을 추가 학습한 알파카(Alpaca)를 공개할 때 사용한 알파카 데이터셋은 위와 같다. 스탠퍼드대학교는 알파카 데이터셋을 
+구축하기 위해 OpenAI의 text-davinci-003 모델을 사용해 175개의 예시 태스크로부터 52000개의 데이터셋을 구축했다.  
+  
+지시사항(instruction)은 사용자의 요구사항을 표현한 문장이다. 입력(input)에는 답변을 하는 데 필요한 데이터가 들어간다. 출력(output)은 지시사항과 
+입력을 바탕으로 한 정답 응답이다. 마지막으로 텍스트(text)는 지시사항, 입력, 출력을 정해진 포맷으로 하나로 묶은 데이터다.  
+  
+위 데이터는 사용자의 요청과 응답 데이터가 포함돼 있지만 아직 특정한 형식을 갖추지는 않았는데 아래 데이터와 같은 템플릿에 위 데이터를 넣어 형식을 맞춘다. 
+아래 데이터를 포면 첫 두 줄에서 "작업을 설명한 지시사항과 맥락 정보인 입력을 바탕으로 요청에 대한 적절한 응답을 작성하라"라는 안내를 하고 지시사항, 입력, 
+응답을 각각 넣어준다. 이때 LLM이 데이터의 형식을 인식할 수 있도록 ###으로 텍스트를 구분하고 있다.  
+  
+f"""  
+Below is an instruction that describes a task, paired with an input that provides  
+further context.  
+Write a response that appropriately completes the request.\n\n  
+```### Instruction:\n{instruction}\n\n```   
+```### Input: \n{input}\n\n```  
+```### Response: \n{output}```  
+"""  
+  
+지도 미세 조정이라는 새로운 용어가 붙었지만 사전 학습 때와 동일하게 다음 단어를 예측하는 인과적 언어 모델링을 사용해 학습한다. 즉 지도 미세 조정이라는 
+이름은 LLM이 학습하는 방식이 달라서가 아니라 학습하는 데이터셋에 차이가 있기 때문에 지어진 것이다.  
+  
+지시 데이터셋을 어떻게 구성하는 게 좋은지 아직 정답은 없다. 메타, 마이크로소프트등 여러 회사에서 어떻게 지시 데이터셋을 구성했을 때 LLM의 성능을 
+높일 수 있는지 연구를 진행했다.  
   
