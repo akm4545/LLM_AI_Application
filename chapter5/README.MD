@@ -137,5 +137,28 @@ API 없이 모델을 학습시킬 때 사용했던 코드와 유사하다. train
 
 chapter5.ipynb 파일에서 모델의 학습 과정에서 메모리 사용량을 확인하는 train_model 정의 참조  
   
+모델을 학습시키기 위해서는 데이터가 필요한데 학습 과정에서 필요한 메모리 사용량에 집중하기 위해 아래 예제와 같이 랜덤 데이터를 생성하는 make_dummy_dataset 
+함수를 정의한다. make_dummy_dataset 함수에서는 텍스트의 길이가 256이고 데이터가 64개인 더미 데이터를 생성하고 datasets 라이브러리의 Dataset 형태로 변환해 
+반환한다.  
 
+chapter5.ipynb 파일에서 랜덤 데이터셋을 생성하는 make_dummy_dataset 정의 참조  
+  
+아래 예제에서 GPU 메모리의 데이터를 삭제하는 cleanup 함수를 정의한다. cleanup 함수에서는 전역 변수 중 GPU 메모리에 올라가는 모델의 변수(model)와 
+데이터셋 변수(dataset)를 삭제하고 gc.collect 함수를 통해 사용하지 않는 메모리를 회수하는 가비지 컬렉션을 수동으로 수행한다. torch.cuda.empty_cache() 함수는 
+더 이상 사용하지 않는 GPU 메모리를 반환한다.  
 
+chapter5.ipynb 파일에서 더 이상 사용하지 않는 GPU 메모리를 반환하는 cleanup 함수 참조  
+  
+아래 예제에서 앞서 정의한 함수를 종합해 배치 크기, 그레이디언트 누적, 그레이디언트 체크포인팅, peft 설정 등에 따라 GPU 사용량을 확인하는 gpu_memory_experiment 
+함수를 정의한다. 먼저 load_model_and_tokenizer 함수와 make_dummy_dataset 함수로 모델, 토크나이저, 데이터셋을 불러온다. 다음으로 실험하려는 
+설정에 따라 학습에 사용할 인자를 설정한다. 모델, 데이터셋, 학습 인자 준비를 마쳤으니 train_model 함수를 통해 학습을 진행하면서 GPU 메모리 사용량을 확인한다. 
+마지막으로 실험이 끝난 모델과 데이터셋을 삭제하고 사용하지 않는 GPU 메모리를 반환한다.  
+  
+chapter5.ipynb 파일에서 GPU 사용량을 확인하는 gpu_memory_experiment 함수 정의 참조  
+  
+아래 예제를 실행해 배치 크기를 4에서 16까지 늘려면서 GPU 메모리 사용량을 측정한다. gpu_memory_experiment 함수에 batch_size를 변경하면서 
+입력하면 배치 크기에 따른 메모리 사용량을 확인할 수 있다. 실험을 진행하기에 앞서 cleanup 함수와 print_gpu_utilization 함ㅅ로 GPU에서 불필요한 
+데이터를 삭제하고 메모리를 사용하지 않고 있음을 확인한다.  
+
+chapter5.ipynb 파일에서 배치 크기를 변경하며 메모리 사용량 측정 참조  
+  
