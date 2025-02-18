@@ -291,7 +291,7 @@ Dataset({
  num_rows: 45678  
 })  
   
-![img.png](img13.png)  
+![img.png](image/img13.png)  
   
 klue_tc_train[0]으로 개별 데이터의 형태를 보기 위해 첫 번째 데이터를 살펴보면 위 그림과 같다. 제목(title)이 있고 레이블(label)은 3으로 되어 있다. 
 위 그림에서 각 컬럼의 의미는 다음과 같다.  
