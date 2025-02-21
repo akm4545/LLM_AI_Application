@@ -288,5 +288,8 @@ ZeRO는 GPU를 많이 사용할수록 각 GPU당 사용하는 메모리가 줄�
 기능을 지원한다. 예제에서는 GPU를 1개만 사용할 수 있는 구글 코랩으로 실습을 진행하므로 자세한 정보는 Accelerate의 딥스피드 사용 가이드
 (https://huggingface.co/docs/accelerate/usage_guides/deepspeed)에서 허깅페이스 트랜스포머에서 ZeRO를 사용하는 방법을 확인  
   
-
-  
+# **효율적인 학습 방법(PEFT): LoRA**  
+LLM과 같은 기반 모델의 크기가 커지면서 하나의 GPU를 사용해 모든 파라미터를 학습하는 전체 미세 조정(full fine-tuning)을 수행하기 어려워졌다. 
+하지만 대부분의 개인과 조직은 여러 GPU를 사용해 모델을 학습시키기 어렵기 때문에 일부 파라미터만 학습하는 PEFT(Parameter Efficient Fine-Tuning) 
+방법 연구가 활발히 이뤄지고 있다. 그중에서도 오픈소스 LLM 학습에서 가장 주목받고 많이 활용되는 학습 방법은 모델에 일부 파라미터를 추가하고 그 부분만 
+학습하는 LoRA(Low-Rank Adaptation) 학습 방식이다.
