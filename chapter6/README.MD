@@ -106,5 +106,46 @@ make_prompt 함수를 사용해 생성한 예시 데이터는 아래와 같다. 
   
 ![img.png](image/img7.png)  
   
+# **GPT-4 평가 프롬프트와 코드 준비**  
+마지막으로 GPT-4를 통해 평가를 수행할 때 사용할 프롬프트와 코드를 준비한다.  
+  
+GPT-4를 사용해 평가를 수행한다면 반복적으로 GPT-4 API 요청을 보내야 한다. 이번 실습에서는 112개의 평가 데이터를 사용하는데 112개 수준이라면 
+for 문을 통해 반복적인 요청을 수행해도 시간이 오래 걸리지 않는다. 하지만 평가 데이터셋을 더 늘린다면 단순 for 문으로는 시간이 오래 걸린다. 그럴 때는 
+OpenAI가 openai-cookbook 깃허브 저장소에서 제공하는 코드(https://github.com/openai-cookbook/blob/main/examples/api_request_parallel_processor.py)
+를 활용하면 요청 제한(rate limit)을 관리하면서 비동기적으로 요청을 보낼 수 있다.  
+  
+![img.png](image/img8.png)  
+  
+해당 코드(api_request_parallel_processor.py)는 위 그림과 같이 요청을 보낼 내용을 저장한 jsonl 파일을 읽어 순차적으로 요청을 보낸다. 중간에 
+에러가 발생하거나 요청 제한에 걸리면 다시 요청을 보내서 결과의 누락도 막아준다. make_requests_for_gpt_evaluation 함수는 평가 데이터셋을 읽어 
+GPT-4 API 요청을 보낼 jsonl 파일을 생성할 때 사용한다.  
+  
+먼저 아래 예제에서 평가 데이터셋에서 요청 jsonl 파일을 생성하는 make_requests_for_gpt_evaluation 함수를 살펴보면 입력한 데이터프레임을 순회하면서 
+평가에 사용할 프롬프트를 생성하고 jsonl 파일에 요청할 내용을 기록한다. 프롬프트에서는 DDL과 Question을 바탕으로 LLM이 생성한 SQL(gen_sql)이 
+정답 SQL(gt_sql, ground truth sql)과 동일한 기능을 하는지 평가하도록 했다. 판단 결과는 resolve_yn이라는 키에 "yes" 또는 "no"의 텍스트가 
+있는 JSON 형식으로 반환하도록 했다. 생성한 평가 프롬프트는 사용할 모델 이름을 지정해 요청 작업(jobs) 변수에 저장한다. 마지막으로 지정한 디렉토리 
+경로와 파일 이름으로 요청 정보를 jsonl 파일 형태로 저장한다.  
+
+chapter6.ipynb 파일에서 평가를 위한 요청 jsonl 작성 함수 참조  
+  
+생성한 jsonl 파일은 파라미터로 지정한 {dir}/{filename} 위치에 저장된다. 아래 예제의 코드를 실행해 OpenAI 쿡북의 비동기 요청 코드를 실행한다. 
+중요한 인자를 살펴보면 requests_filepath에는 API에 전달할 데이터와 인자를 지정한 파일의 경로를 입력한다. 다음으로 save_filepath는 요청 결과가 
+저장되는 파일 경로다. request_url에는 API의 엔드포인트 URL을 입력한다. gpt-4-turbo-preview 모델을 사용하기 위해 chat/completions 경로를 
+지정했다. 마지막으로 max_requests_per_minute와 max_tokens_per_minute는 OpenAI가 모델마다 정해둔 요청 제한 값을 입력한다.  
+
+chapter6.ipynb 파일에서 비동기 요청 명령 참조  
+  
+OpenAI는 이전 사용량에 따라 사용자의 티어(tier)를 구분하고 사용량 제한에 차등을 두고 있다. 최대 요청 제한 값으로 입력할 경우 제한 초과가 빈번히 
+발생하기 때문에 위 예제와 같이 적절히 값을 낮춰 실행하는 걸 추천한다.  
+  
+아래 예제는 코드로 GPT-4에 요청을 전달해 반환된 평가 결과를 읽어와 csv 파일로 변환하는 change_jsonl_to_csv 함수를 정의한다. 평가 결과는 앞서 
+make_requests_for_gpt_evaluation 함수에서 save_file 인자에 지정한 경로에 저장되는데 change_jsonl_to_csv 함수는 결과 파일을 불러와 
+프롬프트와 판단 결과 데이터를 각각 prompts, response 변수에 저장한다. 저장한 데이터는 pd.DataFrame 클래스를 사용해 판다스 데이터프레임으로
+만들고 to_csv() 메서드를 사용해 csv 파일로 저장한다.  
+
+chapter6.ipynb 파일에서 결과 jsonl 파일을 csv로 변환하는 함수 참조  
+  
+GPT-4를 사용해 평가를 수행하기 때문에 빠르게 개발 사이클을 진행할 수 있다는 장점이 있다.  
+  
 
 
