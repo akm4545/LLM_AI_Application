@@ -15,4 +15,18 @@ Text2SQL은 위 그림과 같이 사용자가 얻고 싶은 데이터에 대한 
 datasets==2.19.0 tiktoken==0.6.0 -qqq  
 !pip install huggingface_hub==0.22.2 autotrain-advanced==0.7.77 -qqq  
   
+# **Text2SQL 데이터셋**  
+# **대표적인 Text2SQL 데이터셋**  
+대표적인 Text2SQL 데이터셋으로는 WikiSQL과 Spider가 있다. SQL을 생성하기 위해서는 크게 두 가지 데이터가 필요하다. 먼저 어떤 데이터가 있는지 알 수 
+있는 데이터베이스 정보(테이블과 컬럼)가 필요하다. 다음으로 어떤 데이터를 추출하고 싶은지 나타낸 요청사항(request 또는 question)이 필요하다. 
+WikiSQL 데이터를 예시로 살펴면 아래 예제와 같다. 테이블(table) 항목에 테이블 이름, 컬럼 이름(header), 컬럼 형식(types)이 있고 요청(question) 
+항목으로 어떤 데이터가 필요한지 요청사항이 적혀 있다. 마지막으로 SQL 항목에 정답 SQL 데이터가 있다.  
+  
+![img.png](image/img2.png)  
+  
+WikiSQL은 하나의 테이블만 사용하고 SELECT 문에 컬럼을 1개만 사용하거나 조건절에 최대 3개의 조건만 사용하는 등 비교적 쉬운 SQL 문으로 구성돼 
+있다. Spider는 좀 더 현실적인 문제 해결을 위해 구축된 데이터셋으로 ORDER BY, GROUP BY, HAVING, JOIN 등 비교적 복잡한 SQL 문도 포함하고 있다. 
+하지만 두 데이터셋 모두 요청사항이 영어로 되어 있어 한국어 실습을 위한 데이터셋으로는 적합하지 않다. Spider 데이터셋에 관한 더 자세한 사항은 
+Spider 데이터셋 소개 페이지(https://yale-lily.github.io/spider)에서 확인할 수 있다.  
+  
 
