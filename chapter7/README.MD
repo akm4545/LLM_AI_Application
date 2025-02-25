@@ -12,3 +12,4 @@ GPU를 효율적으로 활용하기 위해서는 한 번에 더 많은 데이터
 다음 명령을 실행해 라이브러리 설치
 !pip install transformers==4.40.1 accelerate==0.30.0 bitsansbytes==0.43.1 auto-gptq==0.7.1 autoawq==0.2.5 optimum==1.19.1 -qqq  
   
+ 
