@@ -162,6 +162,12 @@ make_inference_pipeline 함수를 사용해 beomi/Yi-Ko-6B 모델로 파이프�
 
 chapter6.ipynb 파일에서 기초 모델로 생성하기 참조  
   
+다음으로 아래 예제의 코드로 평가 데이터셋에 대한 SQL 생성을 수행하고 GPT-4를 사용해 평가한다. 먼저 평가 데이터셋을 load_dataset 함수를 사용해 
+내려받고 make_prompt 함수를 사용해 LLM 추론에 사용할 프롬프트를 생성한다. 다음으로 hf_pipe에 생성한 프롬프트를 입력해 SQL을 생성하고 gen_sqls 
+변수에 저장한다. 마지막으로 make_requests_for_gpt_evaluation 함수를 사용해 평가에 사용할 jsonl 파일을 만들고 GPT-4 API에 평가 요청을 전달한다.  
 
-
-
+chapter6.ipynb 파일에서 기초 모델 성능 측정 참조  
+  
+기초 모델에 대한 평가를 진행했을 때 112개의 평가 데이터셋 중 21개를 정답으로 판단했다. 18.75%의 정답률로 더 발전할 수 있는 여지가 충분히 있어 
+보인다.  
+  
