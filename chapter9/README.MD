@@ -332,3 +332,13 @@ W&B를 사용하기 위해서는 우선 W&B 계정을 생성해야 한다. 계�
   
 chapter9.ipynb 파일에서 W&B에 로그인하기 참조  
   
+# **OpenAI API 로깅**  
+대표적인 상업용 LLM API인 OpenAI의 API를 로깅하기 위해서는 아래 예제와 같은 코드를 사용하면 된다. OpenAI API를 통해 텍스트를 생성할 때 사용할 
+시스템 프롬프트(system_message)와 사용자의 질문(query)을 OpenAI 클라이언트의 채팅 모델에 전달해 텍스트를 생성한다. 다음으로 Trace 클래스에 
+OpenAI 요청의 입력과 생성 결과(outputs), 생성 성공 여부(status), 생성에 사용한 설정값(예: temperature) 등을 입력해 기록할 데이터를 생성한다. 
+마지막으로 Trace 클래스의 log 메서드를 사용해 로그를 W&B에 전달한다. 이때 이름을 설정할 수 있는데 하나의 프로젝트 내에서도 서로 다른 요청을 
+구분하기 위해 사용한다. 여기서는 openai_trace라는 이름으로 OpenAI API 요청임을 구분했다. 아래 예제에서는 지면상의 이유로 최소한의 코드만 사용했는데 
+예외 처리가 포함된 전체 예시 코드는 W&B 프롬프트 로깅 공식 문서(https://docs.wandb.ai/guides/prompts/quickstart)에서 확인할 수 있다.  
+  
+chapter9.ipynb 파일에서 OpenAI API 로깅하기 참조  
+  
