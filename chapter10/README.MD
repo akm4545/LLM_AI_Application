@@ -319,3 +319,17 @@ chapter10.ipynb 파일에서 의미 검색의 장점 참조
   
 chapter10.ipynb 파일에서 의미 검색의 한계 참조  
   
+# **라마인덱스에서 Sentence-Transformers 모델 사용하기**  
+라마인덱스는 기본적으로 OpenAI의 text-embedding-ada-002를 사용하기 때문에 OpenAI API 키만 설정하면 라미인덱스에서 내부적으로 임베딩 API를 
+호출해 변환을 수행한다.  
+  
+라마인덱스는 아래 예제와 같이 간단하게 Sentence-Transformers의 임베딩 모델을 통합할 수 있는 기능을 지원한다. 허깅페이스 허브에 모델이 저장된 경우, 
+HuggingFaceEmbedding 클래스에 모델 이름으로 모델 저장소 이름을 입력하면 해당 저장소의 모델을 불러온다. 만약 로컬에 저장된 모델을 활용하고 싶다면 
+주석 처리된 내용과 같이 ServiceContext에서 로컬 모델의 경로를 설정해 주면 된다. 더 자세한 사항은 라마인덱스의 오픈소스 임베딩 모델 공식 문서(
+https://docs.llamaindex.ai/en/stable/module_guides/models/embeddings.html#local-embedding-models)에서 확인할 수 있다.  
+
+chapter10.ipynb 파일에서 라마인덱스에서 Sentence-Transformers 임베딩 모델 활용 참조  
+  
+의미 검색은 키워드가 동일하지 않아도 유사한 의미의 기사를 검색할 수 있다는 장점이 있었지만 관련성이 떨어지는 기사가 먼저 검색되는 한계도 보였다.  
+  
+
