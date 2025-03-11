@@ -94,3 +94,21 @@ chapter11.ipynb 파일에서 학습 데이터에서 검증 데이터셋 분리�
   
 chapter11.ipynb 파일에서 label 정규화하기 참조  
   
+이제 학습 데이터셋은 파이토치의 DataLoader 클래스를 사용해 배치 데이터로 만든다. 아래 예제에서는 학습 데이터셋(train_examples)을 DataLoader에 
+입력하면서 배치 크기가 16인 배치 데이터로 만든다.  
+  
+chapter11.ipynb 파일에서 학습에 사용할 배치 데이터셋 만들기 참조  
+  
+남은 검증 데이터셋과 평가 데이터셋은 Sentence-Transformers 라이브러리에서 제공하는 EmbeddingSimilarityEvaluator 클래스를 사용해 임베딩 모델의 
+성능을 평가할 때 사용할 수 있도록 준비한다. 아래 예제에서는 EmbeddingSimilarityEvaluator 클래스의 from_input_examples 메서드를 사용해 
+검증 데이터셋과 평가 데이터셋을 사용하는 평가 객체를 만든다.  
+  
+chapter11.ipynb 파일에서 검증을 위한 평가 객체 준비 참조  
+  
+위 예제에서 만든 test_evaluator를 활용해 언어 모델을 그대로 문장 임베딩 모델로 만든 embedding_model이 얼마나 문장의 의미를 잘 반영해 문장 
+임베딩을 생성하는지 확인해보자. 다음 예제에서 test_evaluator에 embedding_model을 입력했다. 그러면 평가 데이터셋의 정답 유사도 점수와 embedding_model을 
+사용해 측정한 유사도 점수를 비교해 문장 임베딩 모델이 얼마나 잘 작동하는지 평가한다. 출력된 결과를 보면 0.364로 언어 모델을 그대로 사용할 경우 
+문장 임베딩 모델로서의 역할을 잘하지 못하는 것을 확인할 수 있다.  
+
+chapter11.ipynb 파일에서 언어 모델을 그대로 활용할 경우 문장 임베딩 모델의 성능 참조  
+  
