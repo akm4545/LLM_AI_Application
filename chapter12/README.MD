@@ -6,7 +6,16 @@ RAG에서 데이터를 저장하고 검색할 때 저장소 역할을 하는것�
 많아지면 느려지는데 이런 문제를 극복하기 위한 ANN(Approximate Nearest Neighbor)검색 방식이 있다. 다양한 ANN 검색 알고리즘 중에서 가장 많이 
 활용되는 HNSW(Hierarchical Navigable Small World) 알고리즘이 있다.  
   
-아래 명령어릴 실행해 라이브러리 설치  
+아래 명령어를 실행해 라이브러리 설치  
 !pip install pinecone-client==3.2.2 sentence-transformers==2.7.0 datasets==2.19.0 faiss-cpu==1.8.0 transformers==4.40.1 openai==1.25.2 llama-index==0.10.34 llama-index-vector-stores-pinecone==0.1.6  -qqq  
   
-
+# **벡터 데이터베이스란**  
+벡터 데이터베이스란 벡터 임베딩을 키로 사용하는 데이터베이스를 말한다. 벡터 임베딩은 '데이터의 의미를 담은 숫자 배열(벡터)'이다.  
+  
+![img.png](image/img.png)  
+  
+모든 데이터는 적절한 임베딩 모델만 있다면 임베딩으로 변환할 수 있는데 위 그림과 같이 텍스트, 이미지, 음성과 같은 비정형(unstructured) 데이터는 
+물론이고 서비스에서 판매하는 상품이나 서비스를 사용하는 사용자도 임베딩 모델을 통해 벡터로 표현할 수 있다. 데이터를 적절한 임베딩 모델을 통해 
+임베딩 벡터로 변환헀다면 이제 벡터 데이터베이스에 저장하고 임베딩 벡터의 거리 계산을 통해 유사하거나 관련이 깊은 데이터를 검색할 수 있다. 벡터 
+데이터베이스는 벡터 사이의 거리 계싼에 특화된 데이터베이스라고 할 수 있다.  
+  
