@@ -270,3 +270,15 @@ HNSW 인덱스를 생성할 떄는 KNN과 달리 탐색 속도를 높일 수 있
 높아진다. 즉 생성하는 그래프의 품질이 좋아진다. 따라서 ef_construction이 커지면 재현율이 올라간다. 하지만 더 많은 후보를 탐색하기 때문에 색인 
 시간이 증가한다. 메모리 사용량과 검색 시간은 크게 영향받지 않는다.  
   
+아래 예제는 ef_construction을 40, 80, 160, 320으로 증가시키면서 색인과 검색에 어떤 영향을 미치는지 확인한다. faiss에서 HNSW 인덱스의 ef_construction은 
+index.hnsw.efConstruction 속성으로 설정한다.  
+  
+chapter12.ipynb 파일에서 ef_construction을 변화시킬 때 성능 확인 참조  
+  
+![img.png](image/img3.png)  
+  
+위의 코드를 실행했을 때 출력된 결과를 정리하면 위 표와 같다. ef_construction이 증가하면서 재현율이 증가하고 색인 시간도 함께 증가한다. 메모리 
+사용량과 검색 시간은 크게 영향받지 않는다. ef_construction이 80일 때의 재현율이 ef_construction이 40일 때보다 낮아졌는데 그래프 생성 시 랜덤성이 
+들어가기 때문에 결과가 언제나 의도한 대로 나타나지는 않는다. 나머지 실험에서는 재현율이 증갛는 패턴을 확인할 수 있다. ef_search는 기본 설정인 
+16을 사용했다. 다음 절에서는 ef_construction을 320으로 둔 상태로 ef_search를 변경해 본다.  
+  
