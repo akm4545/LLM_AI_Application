@@ -185,3 +185,69 @@ LLM의 경우 일반적인 머신러닝 모델과 달리 다양한 작업을 수
 있다. 개별적으로 보면 BLEU와 ROUGE는 n그램 매칭에 의존하므로 동의어나 단어의 순서가 달라지거나 문장 구조가 바뀌면 제대로 평가하지 못한다는 한계가 
 있고 펄플렉시티는 평가 점수를 사람이 직관적으로 해석하기 어렵다는 한계가 있다.  
   
+# **벤치마크 데이터셋을 활용한 평가**  
+앞서 살펴본 BLUE, ROUGE와 같은 정량 지표는 평가에 사용하는 데이터셋에 따라 결과가 달라지기 때문에 서로 다른 모델의 성능을 비교할 때는 사용하기 
+어렵다. 다양한 모델의 성능을 비교하기 위해 공통으로 사용하는 데이터셋을 벤치마크 데이텃세이라고 부르는데 LLM 평가에도 많이 사용되는 벤치마크 
+데이터셋이 있다.  
+  
+![img.png](image/img8.png)  
+  
+대표적으로 위 그림의 허깅페이스 오픈 LLM 리더보드에서 사용하는 ARC, HellaSwag, MMLU, TruthfulQA 데이터셋 등이 있다. 이 외에도 다양한 데이터셋이 
+있는데 모두 살펴볼 수는 없으니 이 네 가지 데이터셋에 대해 설명하면서 벤치마크 데이터셋을 전체적으로 알아본다.  
+  
+ARC(AI2 Reasoning Challenge) 데이터셋은 앨런(Allen) 연구소에서 발표한 사지선다형 과학 문제다. 데이터셋은 허깅페이스 ARC 데이터셋 페이지
+(https://huggingface.co/datasets/ai2_arc)에서 확인할 수 있는데 하나만 확인하자면 아래 그림과 같다.  
+  
+![img.png](image/img9.png)  
+![img.png](image/img10.png)  
+  
+HellaSwag는 다음으로 연결될 문장을 4개의 보기 중에 고르는 문제로 구성된 데이터셋이다. 허깅페이스 HellaSwag 데이터셋 페이지(https://huggingface.co/
+datasets/Rowan/hellaswag)에서 확인할 수 있고 예시 데이터는 아래 그림과 같다.  
+  
+![img.png](image/img11.png)  
+  
+MMLU(Massive Multitask Language Understanding)는 다양한 과제에 대한 모델의 성능을 평가하기 위한 데이터셋이다. 초등학교 수학부터 인문학, 
+사회과학, 자연과학과 공학(STEM)등 57개 분야에 대한 사지선다형 문제다. 데이터는 허깅페이스 MMLU 데이터셋 페이지(https://huggingface.co/datasets/cais/
+mmlu)에서 확인할 수 있다. 예시 데이터를 확인하면 아래 그림과 같은데 이는 물리 문제로 중력가속도가 물체를 던졌을 때도 달라지지 않는다는 점을 맞춰야 
+한다.  
+  
+![img.png](image/img12.png)  
+  
+TruthfulQA는 이름에서도 알 수 있듯이 신뢰할 수 있는 모델인지 확인하기 위한 817개의 질문으로 이뤄져 있다. 자세한 정보는 허깅페이스 TruthfulQA 
+데이터셋 페이지(https://huggingface.co/datasets/truthful_qa)에서 확인할 수 있다. 생성, 1개 선택, 여러개 선택 형태로 문제를 풀 수 있도록 
+제공한다. 예시 데이터를 하나 확인하면 아래 예제와 같다.  
+  
+![img.png](image/img13.png)  
+  
+이 외에도 구글에서 발표한 빅벤치(BIG-bench, https://arxiv.org/abs/2206.04615)와 앨런 연구소에서 발표한 Winogrande(https://huggingface.co/
+datasets/winogrande), OpenAI가 발표한 GSM8K(https://huggingface.co/datasets/gsm8k) 데이터셋 등이 있다.  
+  
+LLM 평가에 사용할 수 있는 다양한 데이터셋이 있다 보니 데이터셋별로 평가의 수행이 불편하다는 문제가 있었다. 이런 문제를 해결하기 위해 EleutherAI에서 
+일관된 형태로 평가를 수행할 수 있도록 lm-evaluation-harness 깃허브를 제공하고 있다. 사용하는 모델과 평가에 사용할 작업(데이터셋) 이름을 입력으로 
+넣으면 평가 결과를 확인할 수 있다. 자세한 내용은 lm-evaluation-harness 깃허브 저장소(https://github.com/EleutherAI/lm-evaluatioin-harness)
+에서 확인할 수 있다.  
+  
+한국정보화진흥원(NIA)과 업스테이지(upstage)가 함께 한국어 LLM 리더보드(https://www.aihub.or.kr/leaderboard/view.do?currMenu=500&topMenu=102)를 
+제공하고 있다.  
+  
+![img.png](image/img14.png)  
+  
+해당 리더보드에서는 모델 평가를 위해 위 표와 같이 5개의 데이터셋을 활용한다. 위 4개의 데이터셋 이름은 앞서 살펴본 허깅페이스의 LLM 리더보드 
+데이터셋과 겹치는데 각 데이터셋을 한국어로 번역하고 전문가가 일부 변형했다고 한다. 마지막에 있는 한국어 상식생성능력의 경우 고려대 임희석 교수 연구실에서 
+제공한 Korean-CommonGen V2 데이터로 평가한다.  
+  
+2024년 4월 MLOps 및 LLMOps 플랫폼 기업인 W&B에서 새로운 한국어 LLM 리더보드인 호랑이(Horangi)를 공개했다. 호랑이는 공개 평가 데이터셋을 통해 
+쉽게 LLM을 평가할 수 있도록 만든 llm-kr-eval 프레임워크와 멀티 턴(multi-turn) 대화 성능을 평가하는 MT-Bench를 한국어로 번역한 데이터셋을 활용해 
+LLM의 성느을 평가할 수 있도록 지원한다. 기존의 LLM 평가 방식과 달라진 점은 기존에는 프롬프트에 예시 데이터를 추가함으로써 퓨샷 성능(모델이 적은 수의 예제(샘플) 를 보고 학습하는 방식
+보통 1~10개 정도의 예제만 제공하고, 모델이 패턴을 학습하여 예측을 수행 모델의 적응력(Generalization) 을 측정하는 방법 중 하나)을 측정하는 
+경우도 많았는데 호랑이는 제로샷 추론(Zero-shot Learning (제로샷 러닝, 학습 없이 추론)모델이 사전 학습 없이 바로 새로운 작업을 수행하는 능력
+예제 없이 질문을 던졌을 때 얼마나 정확하게 답을 낼 수 있는지 평가)을 기본 평가 방식으로 사용해 모델의 본질적인 성능을 측정하는 것을 목표로 한다는 것이다.
+또한 앞서 살펴본 ARC, HellaSwag 등 사지선다형 문제로 구성된 벤치마크 데이터셋의 경우 LLM이 정답 문장을 생성할 확률을 비교해서 어떤 정답을 선택하는지 
+판단했는데 호랑이는 문장의 생성 확률이 아니라 실제로 생성한 텍스트 결과가 A, B, C, D와 같이 정답과 일치하는지를 비교해 성능을 평가한다. 기존 
+방식보다 더 엄격한 생성 능력을 평가한다고 볼 수 있다.  
+  
+호랑이 LLM 라더보드에 대한 더 자세한 정보는 W&B 리더보드는 소개 페이지(https://wandb.ai/wandb-korea/korean-llm-leaderboard/reports/
+Horiagi-LLM-LLM---Vmlldzo3MzA0Mdg0)와 llm-kr-eval 깃허브 저장소(https://github.com/wandb/llm-kr-eval), 그리고 한국어 MT-Bench 
+깃허브 저장소(https://github.com/wandb/FastChat/tree/korean)에서 확인할 수 있다.  
+  
+
