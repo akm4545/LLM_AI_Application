@@ -307,3 +307,23 @@ GPT-4-turbo 모델은 AutoGen 스튜디오에 대해 알지 못하기 때문에 
   
 chapter15.ipynb 파일에서 2개의 그룹챗을 실행한 결과 비교 참조  
   
+# **멀티 모달 에이전트**  
+멀티 모달 모델을 활용하면 텍스트와 이미지 입력을 함께 처리하는 에이전트를 구현할 수 있다.  
+  
+먼저 아래 예제를 실행해 필요한 라이브러리를 불러오고 GPT-4o 모델 설정과 DALL-E 3 모델 설정을 각각 config_list_4o와 config_list_dalle 변수에 
+저장한다.  
+  
+chapter15.ipynb 파일에서 실습 준비하기 참조  
+  
+다음으로 아래 예제에서 내부적으로 DALL-E 3 모델을 사용해 이미지를 생성하는 DALLEAgent와 모델 API 요청에 사용하는 dalle_call 함수를 정의한다. 
+dalle_call 함수는 입력 프롬프트를 OpenAI의 DALL-E API에 전달해 이미지를 생성한다. 생성된 이미지는 get_image_data 함수를 통해 내려받아 img_data 
+변수에 저장하고 반환한다. DALLEAgent는 OpenAI 클라이언트를 관리하고 generate_dalle_reply 메서드를 통해 대화 메시지로 받은 프롬프트로 이미지를 
+생성한다.  
+  
+chapter15.ipynb 파일에서 DALLEAgent 정의 참조  
+  
+먼저 DALLEAgent를 사용해 단순히 사용자의 요청을 받아 이미지를 생성하는 에이전트를 만들어 보자. 아래 예제에서 painter 변수에 이미지 생성 에이전트를 
+인스턴스화하고 사용자 역할 에이전트를 통해 "갈색의 털을 가진 귀여운 강아지를 그려줘"라는 요청을 전달한다.  
+
+chapter15.ipynb 파일에서 이미지 생성 에이전트 실행 참조  
+  
