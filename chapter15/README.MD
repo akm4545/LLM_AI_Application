@@ -261,3 +261,49 @@ chapter15.ipynb 파일에서 삼성전자의 3개월 주식 가격 그래프를 
 기간 내 최소 주식 가격으로 자른 것을 확인할 수 있다. 그림 b는 네이버에서 삼성전자 주가를 검색했을 때 나오는 그래프인데 가로 세로 비율의 차이는 있지만 
 목표를 잘 달성한 것을 확인할 수 있다.  
   
+# **RAG 에이전트**  
+최신 정보를 반영하기 어렵고 환각 현상을 보이는 LLM 약점을 보완해 주는 RAG 기법에 대해 살펴봤다. 에이전트도 LLM을 활용하기 때문에 관련된 정보가 
+프롬프트에 추가됐는지 여부에 따라 성능이 크게 달라진다. 아래 예제에서 RAG 에이전트를 구현하기 위한 에이전트 클래스를 가져와 정의한다. 이전 실습과 
+달리 클래스 이름이 RetrieveAssistantAgent와 RetrieveUserProxyAgent인 것을 확인할 수 있다. 실습에서 사용한 gpt-4-turbo-preview 모델은 
+2023년 3월까지의 데이터로 학습됐기 때문에 2023년 10월에 공개된 AutoGen에 대한 정보를 알지 못한다. 사용자 역할 에이전트(ragproxyagent)를 
+정의하면서 AutoGen 깃허브 메인 페이지 주소를 RAG에 활용할 수 있도록 docs_path 키로 입력해 준다. 실행하면 아래 예제의 하단에서 확인할 수 
+있듯이 AutoGen이 LLM 애플리케이션과 에이전트 개발을 위한 프레임워크임을 잘 설명하고 있다.  
+  
+chapter15.ipynb 파일에서 RAG 에이전트 클래스를 사용한 작업 실행 참조  
+  
+제공한 깃허브 주소의 정보를 활용해 정확한 답변을 한 것인지 확인하기 위해 아래 예제에서 기본 사용자 역할 에이전트(UserProxyAgent)를 사용한 결과를 
+확인해 보자. 예제의 하단에서 확인할 수 있듯이 AutoGen 라이브러리에 대해 알지 못하고 '자동 생성을 의미하는 용어'라고 답변하고 있다.  
+  
+chapter15.ipynb 파일에서 외부 정보를 활용하지 못하는 기본 에이전트의 답변 참조  
+  
+AutoGen에서는 RAG를 구현할 때 기본적으로 텍스트 임베딩 모델에 Sentence-Transformers 라이브러리를 사용하고 벡터 데이터베이스로는 크로마를 
+사용한다. 각각의 요소는 원하는 대로 변경이 가능한데 아래 예제는 임베딩 모델을 OpenAI의 text-embedding-3-small로 변경하는 예시다. 크로마 DB의 
+embedding_functions 함수에 OpenAI API 키와 모델 이름을 전달해 openai_ef 변수를 생성한다. 그리고 RAG 에이전트를 생성하면서 임베딩 모델로 
+openai_ef를 사용하도록 설정한다. 더 자세한 사항은 AutoGen의 RAG 에이전트 소개 글(https://microsoft.github.io/autogen/blog/2023/10/18/RetrieveChat)
+에서 확인할 수 있다.  
+  
+chapter15.ipynb 파일에서 OpenAI 임베딩 모델을 사용하도록 설정하기 참조  
+  
+다음으로 AutoGen을 활용해 3개 이상의 에이전트가 협업하는 그룹챗(GroupChat)을 만들어 보자. 먼저 그룹챗에서 대화를 나눌 에이전트를 정의한다. 
+아래 예제에서는 총 4개의 에이전트를 정의하는데 user와 user_rag는 RAG 사용 여부만 다른 사용자 역할 에이전트로 RAG 사용에 따른 결과 비교를 위해 
+각각 다른 그룹챗에 들어간다. user_rag에는 이전과 마찬가지로 외부 정보를 추가하는데 이번에는 AutoGen이 아닌 AutoGen 스튜디오 깃허브 페이지를 
+입력했다. coder는 파이썬 프로그래머 역할의 에이전트이고 pm은 프로덕트 매니저 역할의 에이전트다. 에이전트들은 아래 예제의 최하단에 있는 PROBLEM
+("AutoGen Studio는 무엇이고 AutoGen Studio로 어떤 제품을 만들 수 있을까?") 질문에 답변하기 위해 협력한다.  
+  
+chapter15.ipynb 파일에서 대화에 참여할 에이전트 참조  
+  
+이제 아래의 예제로 각각의 그룹챗을 정의한다. rag_chat은 RAG를 사용하는 user_rag와 coder, pm이 대화를 나누고 norag_chat은 RAG를 사용하지 
+않는 user와 coder, pm이 대화를 나눈다. 그룹챗을 정의할 때는 autogen, GroupChat 클래스를 통해 누가 대화에 참여하는지, 발화자는 어떻게 선정할지
+(speaker_selection_method), 최대 몇 번의 대화를 진행할지(max_round) 등의 인자를 설정한다. 그룹챗 설정에 관한 더 자세한 사항은 AutoGen의 
+그룹챗 공식 문서(https://microsoft.github.io/autogen/docs/reference/agentchat/groupchat/)에서 확인할 수 있다. 다음으로그룹챗에는 
+대화를 관리하는 매니저가 필요한데 autogen, GroupChatManager 클래스에 앞서 정의한 그룹챗을 전달하면 된다. 마지막으로 2개의 에이전트가 대화를 
+시작할 때와 마찬가지로 사용자 역할 에이전트의 initiate_chat 메서드를 통해 대화를 시작한다.  
+  
+chapter15.ipynb 파일에서 RAG 사용 여부에 따른 2개의 그룹챗 정의 및 실행 참조  
+  
+아래 예제로 각각의 그룹챗을 실행하고 출력된 결과를 간략히 요약한 결과를 확인해 보자. 예상할 수 있듯이 RAG를 사용하지 않은 경우(norag_chat) 
+GPT-4-turbo 모델은 AutoGen 스튜디오에 대해 알지 못하기 때문에 AutoGen이 자동화된 코드 생성 도구라고 소개하고 있다. RAG를 사용한 경우(rag_chat)
+는 AutoGen 스튜디오 소개 페이지를 참고해 AutoGen에 기반해 빠르게 프로토타입을 개발할수 있는 도구라고 잘 설명하고 있다.  
+  
+chapter15.ipynb 파일에서 2개의 그룹챗을 실행한 결과 비교 참조  
+  
